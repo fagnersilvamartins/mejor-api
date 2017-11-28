@@ -9,7 +9,7 @@ const db_user = 'mejor',
     db_password = 'ch4v31r0',
     db_uri = 'mongodb://'
         + db_user + ':'
-        + db_password + '@ds119406.mlab.com:19406/mejor_db';
+        + db_password + '@ds123556.mlab.com:23556/mejor_db';
 
 module.exports = {
     port: process.env.PORT || 5000,

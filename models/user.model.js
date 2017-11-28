@@ -12,14 +12,30 @@ const UserSchema = new mongoose.Schema({
     username: {
         type: String,
         required: true
-    },
-    full_name: {
-        type: String,
-        required: true
-    },
+    },    
     image: {
         type: String,
         required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    birthday: {
+        type: Date,
+        default: undefined
+    },
+    city: {
+        type: String,
+        default: undefined
+    },
+    education: {
+        type: String,
+        default: undefined
+    },
+    job: {
+        type: String,
+        default: undefined
     }
 });
 
@@ -30,16 +46,16 @@ UserSchema.statics = {
      * @returns {Promise<User, APIError>}
      */
     get(id) {
-      return this.findOne({ 'id_instagram': id })
-        .exec()
-        .then((user) => {
-          if (user) {
-            return user;
-          }
-          return httpStatus.NOT_FOUND;
-        });
-    }    
-  };
+        return this.findOne({ 'id_instagram': id })
+            .exec()
+            .then((user) => {
+                if (user) {
+                    return user;
+                }
+                return httpStatus.NOT_FOUND;
+            });
+    }
+};
 
 /**
  * @typedef User
