@@ -1,4 +1,6 @@
 var User = require('../models/user.model');
+var passport = require('passport');
+var httpStatus = require('http-status');
 
 function create(params) {
     const user = new User({
@@ -15,4 +17,20 @@ function findByIdInstagram(id) {
     return User.get(id);
 }
 
-module.exports = { create, findByIdInstagram };
+function getUserById(req, res, next) {
+    if (req.params.id) {
+        passport.authenticate('instagram-token', (user) => {
+            findByIdInstagram(req.params.id).then(function (data) {
+                res.setHeader('Access-Control-Allow-Origin', '*');
+                if (data == httpStatus.NOT_FOUND) {
+                    return next({'message': httpStatus.NOT_FOUND});
+                }
+                return res.json(user);
+            });
+        })(req, res, next);
+    } else {
+        return next({'message': 'Invalid params'});
+    }
+}
+
+module.exports = { create, findByIdInstagram, getUserById };
