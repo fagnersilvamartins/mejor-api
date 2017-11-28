@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var passport = require('./config/passport');
 var users = require('./routes/users');
 var authInstagram = require('./routes/auth-instagram');
+var schedule = require('./routes/schedule');
 
 var app = express();
 
@@ -22,6 +23,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use('/user', users);
 app.use('/auth', authInstagram);
+app.use('/schedule', schedule);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

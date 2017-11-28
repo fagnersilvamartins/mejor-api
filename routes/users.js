@@ -6,7 +6,7 @@ var router = express.Router();
 /* GET users listing. */
 router.get('/:id', userCtrl.getUserById);
 
-router.put('/:id', userCtrl.update);
+router.post('/:id', userCtrl.update);
 
 module.exports = router;
 

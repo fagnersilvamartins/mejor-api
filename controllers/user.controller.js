@@ -19,17 +19,18 @@ function findByIdInstagram(id) {
 
 function update(req, res, next) {
     if (validateUpdateUser(req)) {
+        const body = JSON.parse(Object.keys(req.body)[0]);
         passport.authenticate('instagram-token', (user) => {            
             findByIdInstagram(req.params.id).then(function (dbUser) {
                 res.setHeader('Access-Control-Allow-Origin', '*');
                 if (dbUser == httpStatus.NOT_FOUND) {
                     return next({ 'message': httpStatus.NOT_FOUND });
                 }
-                dbUser.birthday = req.body.birthday;
-                dbUser.name = req.body.name;
-                dbUser.city = req.body.city;
-                dbUser.education = req.body.education;
-                dbUser.job = req.body.job;
+                dbUser.birthday = body.birthday;
+                dbUser.name = body.name;
+                dbUser.city = body.city;
+                dbUser.education = body.education;
+                dbUser.job = body.job;
                 dbUser.save((err) => {
                     if (err) {
                         return next({ 'message': 'Invalid params' });
