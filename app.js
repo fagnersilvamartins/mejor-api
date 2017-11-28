@@ -3,21 +3,9 @@ var path = require('path');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 var passport = require('./config/passport');
 var users = require('./routes/users');
 var authInstagram = require('./routes/auth-instagram');
-var config = require('./config/config');
-
-var promise = mongoose.connect(config.db.uri, {
-  useMongoClient: true
-});
-
-promise.then(function (db) {
-
-}, function () {
-  throw new Error(`unable to connect to database: ${config.db.uri}`);
-});
 
 var app = express();
 
