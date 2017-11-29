@@ -7,6 +7,9 @@ var passport = require('./config/passport');
 var users = require('./routes/users');
 var authInstagram = require('./routes/auth-instagram');
 var schedule = require('./routes/schedule');
+var freeDates = require('./config/free-dates');
+
+freeDates.populateFreeDates();
 
 var app = express();
 

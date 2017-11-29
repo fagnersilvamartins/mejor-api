@@ -2,22 +2,22 @@ var mongoose = require('../config/database');
 var httpStatus = require('http-status');
 
 /**
- * Schedule Schema
+ * FreeDates Schema
  */
-const ScheduleSchema = new mongoose.Schema({
-    id_user: {
-        type: Number,
+const FreeDateSchema = new mongoose.Schema({
+    date: {
+        type: Date,
         required: true
     },
-    id_date: {
-        type: String,
-        required: true
+    enable: {
+        type: Boolean,
+        default: true
     }
 });
 
-ScheduleSchema.statics = {
+FreeDateSchema.statics = {
     get(id) {
-        return this.findOne({ 'id_user': id })
+        return this.findOne({ '_id': id })
             .exec()
             .then((schedule) => {
                 if (schedule) {
@@ -29,6 +29,6 @@ ScheduleSchema.statics = {
 };
 
 /**
- * @typedef Schedule
+ * @typedef FreeDate
  */
-module.exports = mongoose.model('Schedule', ScheduleSchema);
+module.exports = mongoose.model('FreeDate', FreeDateSchema);

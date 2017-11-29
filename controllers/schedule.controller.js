@@ -1,4 +1,5 @@
 var Schedule = require('../models/schedule.model');
+var FreeDate = require('../models/free-date.model');
 var passport = require('passport');
 var httpStatus = require('http-status');
 
@@ -6,16 +7,27 @@ function create(req, res, next) {
     if (validateParams(req)) {
         const body = JSON.parse(Object.keys(req.body)[0]);
         passport.authenticate('instagram-token', (user) => {
-            res.setHeader('Access-Control-Allow-Origin', '*');
-            const schedule = new Schedule({
-                id_user: body.id_user,
-                date: body.date,
-            });
-            schedule.save((err) => {
+            FreeDate.findById(body.id_date, function (err, freeDate) {
                 if (err) {
-                    return next({ 'message': 'Invalid params' });
+                    return next({ 'message': err });
                 }
-                return res.json(schedule);
+                freeDate.enable = false;
+                freeDate.save((err) => {
+                    if (err) {
+                        return next({ 'message': err });
+                    }
+                    res.setHeader('Access-Control-Allow-Origin', '*');
+                    const schedule = new Schedule({
+                        id_user: body.id_user,
+                        id_date: body.id_date,
+                    });
+                    schedule.save((err) => {
+                        if (err) {
+                            return next({ 'message': err });
+                        }
+                        return res.json(schedule);
+                    });
+                });
             });
         })(req, res, next);
     } else {
@@ -26,7 +38,12 @@ function create(req, res, next) {
 function allDates(req, res, next) {
     passport.authenticate('instagram-token', () => {
         res.setHeader('Access-Control-Allow-Origin', '*');
-        return res.json(dates());
+        FreeDate.find({}, function (err, freeDates) {
+            if (err) {
+                return next(err);
+            }
+            return res.json(freeDates);
+        });
     })(req, res, next);
 }
 
@@ -37,39 +54,5 @@ function validateParams(req) {
     return false;
 }
 
-function dates() {
-    return [
-        {
-            date: new Date(2017, 11, 2),
-            times: [
-                '8:00', '10:00', '14:00', '16:00', '18:00'
-            ]
-        },
-        {
-            date: new Date(2017, 11, 9),
-            times: [
-                '7:00', '9:00', '13:00', '15:00', '17:00'
-            ]
-        },
-        {
-            date: new Date(2017, 1, 16),
-            times: [
-                '8:00', '10:00', '14:00', '16:00', '18:00'
-            ]
-        },
-        {
-            date: new Date(2017, 11, 23),
-            times: [
-                '9:00', '11:00', '15:00', '17:00', '19:00'
-            ]
-        },
-        {
-            date: new Date(2017, 11, 30),
-            times: [
-                '8:00', '10:00', '14:00', '16:00', '18:00'
-            ]
-        }
-    ]
-}
 
 module.exports = { allDates, create };
